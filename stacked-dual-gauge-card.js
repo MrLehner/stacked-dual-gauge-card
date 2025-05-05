@@ -1,4 +1,4 @@
-class EnergyGaugeCard extends HTMLElement {
+class StackedDualGaugeCard extends HTMLElement {
   set hass(hass) {
     this._hass = hass;
 
@@ -197,10 +197,10 @@ class EnergyGaugeCard extends HTMLElement {
     this.card.appendChild(this.styles);
     this.appendChild(this.card);
 
-    content.classList.add('energy-gauge-card');
+    content.classList.add('stacked-dual-gauge-card');
     // Construct the inner HTML string
     let innerHTML_string = `
-      <div class="energy-gauge">
+      <div class="stacked-dual-gauge">
         <div class="gauge-frame">
           <div class="gauge-background circle-container">
             <div class="circle"></div>
@@ -281,7 +281,7 @@ class EnergyGaugeCard extends HTMLElement {
 
   _initStyles() {
     this.styles.innerHTML = `
-      .energy-gauge-card {
+      .stacked-dual-gauge-card {
         --gauge-card-width:${this.config.cardwidth}px;
         --gauge-background-color: ${this.config.background_color};
 
@@ -297,11 +297,11 @@ class EnergyGaugeCard extends HTMLElement {
         margin: 6px auto;
       }
 
-      .energy-gauge-card div {
+      .stacked-dual-gauge-card div {
         box-sizing:border-box
       }
 
-      .energy-gauge {
+      .stacked-dual-gauge {
         overflow: hidden;
         width: 100%;
         height: 0;
@@ -421,4 +421,4 @@ class EnergyGaugeCard extends HTMLElement {
   }
 }
 
-customElements.define('energy-gauge-card', EnergyGaugeCard);
+customElements.define('stacked-dual-gauge-card', StackedDualGaugeCard);
