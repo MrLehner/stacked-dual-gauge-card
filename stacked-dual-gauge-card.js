@@ -70,8 +70,6 @@ class StackedDualGaugeCard extends HTMLElement {
     // Set default values for outer and inner gauges
     this._setDefaults(this.config.outer,0);
     this._setDefaults(this.config.inner, this.config.outer.length);
-
-    //TODO: https://wiki.selfhtml.org/wiki/Farbe/Farbangaben#Farbnamen
   }
 
 
@@ -372,7 +370,7 @@ class StackedDualGaugeCard extends HTMLElement {
       }
 
       .gauge-value, .gauge-label {
-        line-height: 80%;
+        line-height: 85%;
         color: var(--label-color);
       }
 
