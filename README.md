@@ -63,8 +63,31 @@ The inner and outer gauge are specified by giving a list of entities to be displ
 | `color`             | string    | Predefined selection of color values | See [Valid color values](#validcolorvalues)  | Color for this input used for the gauge, the value and the label |
 
 ### Valid color values
-to be done
+There are several ways to specify a color:
 
+#### Predefined Homeassistant-colors
+There are some predefined colors which are available as CSS-variables. They need to be empraced by `var(<variablename>)`.
+
+Examples: `var(--red-color)`, `var(--blue-color)``var(--light-blue-color)`, `var(--yellow-color)`, `var(--amber-color)`.
+For a list of predefined values see [color.globals.ts](https://github.com/home-assistant/frontend/blob/master/src/resources/theme/color.globals.ts).
+
+#### HTML Standard  Colors
+You can use HTML standard colors. Visit one of the following sites for a reference:
+* https://htmlcolorcodes.com/color-names/
+* https://developer.mozilla.org/en-US/docs/Web/CSS/named-color
+* https://wiki.selfhtml.org/wiki/Farbe/Farbangaben#Farbnamen
+
+#### rgb- or hsv-values
+
+Red-blue-green-values can be given in the format `rgb(255 0 0)` (for red).
+
+Hue-saturation-lightness-values can be given in the format `hsl(0 100 50)` (for red).
+
+It also allows an additional value for opacity. E.g. `rgb(255 0 0 /0.8)` (for red with 80% opacity).
+
+For more information visit
+* https://developer.mozilla.org/en-US/docs/Web/CSS/color_value
+* https://wiki.selfhtml.org/wiki/Farbe/Farbmodelle
 
 
 ## Examples
@@ -100,4 +123,28 @@ inner:
     color: var(--amber-color)
 ```
 
-
+Here is another example:
+![Second example screenshot](./doc/example2.png)
+```
+type: custom:energy-gauge-card
+min: 0
+max: 12000
+precision: 0
+scale_factor: 1
+title: Strom [W]
+title_font_size: 14px
+value_font_size: 20px
+label_font_size: 15px
+cardwidth: 400
+outer:
+  - entity: sensor.solaredge_i1_ac_power
+    label: PV
+    color: var(--green-color)
+inner:
+  - entity: sensor.stromverbrauch
+    label: Verbrauch
+    color: var(--red-color)
+  - entity: sensor.power_ac9
+    label: Puffer
+    color: var(--amber-color)
+```
