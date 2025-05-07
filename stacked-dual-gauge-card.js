@@ -1,3 +1,7 @@
+// Visit https://github.com/MrLehner/stacked-dual-gauge-card for source, license and more information
+// Copyright (c) 2019 Custom cards for Home Assistant
+// Copyright (c) 2025 MrLehner
+
 class StackedDualGaugeCard extends HTMLElement {
   set hass(hass) {
     this._hass = hass;
