@@ -124,6 +124,7 @@ inner:
 ```
 
 Here is another example:
+
 ![Second example screenshot](./doc/example2.png)
 ```
 type: custom:energy-gauge-card
