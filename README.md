@@ -1,148 +1,103 @@
-# Dual gauge card
-
-> [!IMPORTANT]
-> **Looking for new maintainer!**
-> 
-> I can't find the time or inspiration to take care of this project anymore.  
-> So if you'd like to become the new maintainer of this project please let me know via a Pull request!
-
-  
-Two gauges in one, built mostly with CSS.
+# Stacked Dual Gauge Card
 
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs)
+
+A custom card with a dual gauge visualizing multiple entities.
+
+![Example screenshot](./doc/example1.png)
 
 
-![dual-gauge-card-screenshot](https://user-images.githubusercontent.com/2353088/43733272-5f59d8fe-99b4-11e8-8161-0c55e096b862.png)
+This custom card is based on the nice [dual gauge card](https://github.com/custom-cards/dual-gauge-card) and was extended to take multiple inputs for the inner and outer gauge which are then displayed in a stacked manner on a semicircle. This allows to visualize several signals of a type and compare with others.
+For instance, it can be used to display produced energy from different sources and compare with consumption in different *sinks*.
 
+## Features
 
-Heavily inspired by [ciotlosm's gauge-card](https://github.com/ciotlosm/custom-lovelace/), but completly written
-from scratch.
+Major features are ...
+
+- Multiple inputs/entities for each (outer and inner) gauge
+- A configurable color can be assigned to each input.
+- The value of each input is displayed in the same color. The values are automatically distributed nicely in a semicircle around a given title, below the inner gauge.
+- Additionally a label can be assigned to each input which is displayed below the corresponding input value.
+- Clicking on a value or label will show the recent history diagram of the corresponding entity.
+- Reduce the number of digits by providing a scale factor and a precision for the input values.
+
+Some differences compared to the [dual gauge card](https://github.com/custom-cards/dual-gauge-card), worth to be mentioned:
+- While in the dual gauge card, the color of the gauge can change depending on the value of the entity, the color is fixed here.
+- All font-sizes can be individually specified for title, values and labels.
 
 ## Installation
 
-Use [HACS](https://github.com/custom-components/hacs) (recommended)
-or download [dual-gauge-card.js](https://github.com/custom-cards/dual-gauge-card/raw/master/dual-gauge-card.js) and place it in your www directory.
+Download [stacked-dual-gauge-card.js](stacked-dual-gauge-card.js) and place it in your `config/www` directory of your Home Assistance instance.
 
-In your ui-lovelace.yaml add this:
-```yaml
-  - url: /community_plugin/dual-gauge-card/dual-gauge-card.js
-    type: js
+Add the file to the resources following the steps described in [this section](https://github.com/home-assistant-tutorials/02.hello-world-card?tab=readme-ov-file#adding-the-resource) of the [Home Assistant Tutorial](https://github.com/home-assistant-tutorials).
+
+
+## Configuration
+### Main options
+
+| Name                | Type      | Default | Supported options | Description |
+| ---                 | :---:       | :---: | :---: | --- |
+| `type`              | string  | **Required** | `custom:stacked-dual-gauge-card` | Type of the card |
+| `title`             | string  |  | Any *short* text | Text displayed in the bottom center. Could be a title but also a unit or anything else. |
+| `min`               | number  | 0 | Any floating point number | Minimum value for gauge (empty) |
+| `max`               | number  | 100 | Any floating point number higher than min | Maximum value for gauge (fully filled) |
+| `background_color`  | string  | `var(--secondary-background-color` | See [Valid color values](#validcolorvalues) | Background gauge color |
+| `cardwidth`         | integer | 300 |  | Width of the card in pixels. Note that the card width is fixed and does not resize depending on the available space |
+| `scale_factor`      | number  | 1.0 | Any floating point number | Before printing the input values, the input values are multiplied with the given scale factor. This way, you can scale down high multi-digit values for easier readibility. For instance, a scale factor of 0.001 would display power-values in kilowatts instead of watts. |
+| `precision`         | integer | 1 | 0-n | Specifies the number of digits to be displayed beyond the decimal point for each (scaled) value |
+| `title_font_size`   | string  | `20px` |  | Font size for the title |
+| `value_font_size`   | string  | `18px` |  | Font size for the printed values |
+| `label_font_size`   | string  | `12px` |  | Font size for the labels |
+| `outer`             | object  | **Required** | See [Gauge configuration](#Gaugeconfiguration) | Specifies the entities to be displayed in the outer gauge. |
+| `inner`             | object  | **Required** | See [Gauge configuration](#Gaugeconfiguration) | Specifies the entities to be displayed in the outer gauge. |
+
+
+### Gauge configuration
+The inner and outer gauge are specified by giving a list of entities to be displayed. For each entity the following attributes can be given. At least one valid entity needs to be provided.
+
+| Name                | Type      | Default | Supported options | Description |
+| ---                 | ---       | --- | --- | --- |
+| `entity`            | string    | **Required** | Any valid entity | Specifies an input signal to be visualized |
+| `attribute`         | string    | - | Any valid attribute of the entity | Use this attribute of the entity instead of its state. (NOTE: This features is not tested yet) |
+| `label`             | string    |  | Any ***short*** text | Label for the input (printed below the value) |
+| `color`             | string    | Predefined selection of color values | See [Valid color values](#validcolorvalues)  | Color for this input used for the gauge, the value and the label |
+
+### Valid color values
+to be done
+
+
+
+## Examples
+
+The above example was configured like this:
+```
+type: custom:stacked-dual-gauge-card
+min: 0
+max: 20000
+precision: 1
+scale_factor: 0.001
+title: kW
+title_font_size: 20px
+value_font_size: 15px
+label_font_size: 10px
+cardwidth: 300
+outer:
+  - entity: input_number.sun_power
+    label: Sun
+    color: var(--green-color)
+  - entity: input_number.wind_power
+    label: Wind
+    color: var(--lime-color)
+inner:
+  - entity: input_number.power_consumption
+    label: House
+    color: var(--red-color)
+  - entity: input_number.power_to_heat
+    label: Heating
+    color: var(--orange-color)
+  - entity: input_number.charging_power
+    label: Charging
+    color: var(--amber-color)
 ```
 
-If you don't use HACS please change the url accordingly.
-
-## Config
-
-| Name             | Type   | Default | Description                                      |
-|------------------|--------|---------|--------------------------------------------------|
-| title            | string |         | Common title                                     |
-| min              | int    | 0       | minimum value                                    |
-| max              | int    | 100     | maximum value                                    |
-| colors           | object |         | color config (optional)                          |
-| background_color | string |         | background color of the gauges                   |
-| shadeInner       | bool   | true    | shade (darken) colors of the inner gauge by 25%  |
-| cardwidth        | int    | 300     | width of the card in pixels (see below)          |
-| outer            | object |         | config for the outer gauge                       |
-| inner            | object |         | config for the inner gauge                       |
-| precision        | int    | 2       | decimal precision                                |
-
-### gauge config
-
-Both gauges have the same attributes:
-
-| Name      | Type   | Default | Description                                                      |
-|-----------|--------|---------|------------------------------------------------------------------|
-| entity    | string |         | entity id                                                        |
-| attribute | string |         | use this attribute of the entity instead of its state (optional) |
-| label     | string |         | label for this gauges value (optional)                           |
-| unit      | object |         | unit to add to the value (optional)                              |
-| min       | int    |         | minimum value                                                    |
-| max       | int    |         | maximum value                                                    |
-| colors    | object |         | color config (optional)                                          |
-| precision | int    | 2       | decimal precision                                                |
-
-### cardwidth
-
-You may use the config value _cardwidth_ to set the overall width of the card as an absolute value in pixels.
-All elements of the gauge are sized relative to this so that the gauge scales to this, _but_ the card is not
-responsive for now, i.e. it doesn't resize automatically.
-
-
-### color config
-
-Colors can be configured as list of pairs of each a color and a minimum value.
-
-If a gauges value is greater than or equal to one of those minimum values, the according color 
-is used for that gauge. If no color is found, the last color in the list is used as a fallback.
-To use a single color regardless of the value just use a single list entry with any value to always trigger
-the fallback.
-
-By default, colors for the inner gauge are shaded by 25% (see option _shadeInner_).
-
-The list is automatically sorted so you don't need to do that in your config - but I recommend it anyways.
-
-### common config vs. individual config
-
-Colors, as well as the min and max values, may be configured once for both gauges or individually for each gauge. Individual values override common values.
-
-## Example
-
-The example on the screenshot is configured like this:
-```
-- type: custom:dual-gauge-card
-  title: Living room
-  min: -20
-  max: 40
-  outer:
-    entity: climate.living_room
-    attribute: current_temperature
-    label: "Current"
-    unit: "°C"
-  inner:
-    entity: climate.living_room
-    label: "Target"
-    attribute: temperature
-    unit: "°C"
-  colors:
-    - color: "var(--label-badge-red)"
-      value: 27.5
-    - color: "var(--label-badge-green)"
-      value: 25
-    - color: "var(--label-badge-yellow)"
-      value: 18
-    - color: "var(--label-badge-blue)"
-      value: 0
-    - color: "var(--paper-blue-400)"
-      value: -40
-```
-
-In this example, the outer gauge has individual min and max values and uses default colors, whereas the inner
-gauge has individual colors and uses the common min and max values.
-```
-- type: custom:dual-gauge-card
-  title: Living room
-  min: -20
-  max: 40
-  precision: 2
-  outer:
-    entity: climate.living_room
-    attribute: current_temperature
-    label: "Current"
-    unit: "°C"
-    min: -30
-    max: 50
-  inner:
-    entity: climate.living_room
-    label: "Target"
-    attribute: temperature
-    unit: "°C"
-    colors:
-      - color: "var(--label-badge-green)"
-        value: 25
-      - color: "var(--label-badge-yellow)"
-        value: 18
-      - color: "var(--label-badge-blue)"
-        value: 0
-```
 
